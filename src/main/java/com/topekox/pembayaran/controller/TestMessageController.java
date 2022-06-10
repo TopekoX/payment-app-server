@@ -1,6 +1,7 @@
 package com.topekox.pembayaran.controller;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,6 @@ public class TestMessageController {
 	
 	@PostMapping(value = "/testMessage")
 	public Map<String, String> test(@RequestBody NotificationRequest notificationRequest) {
-		service.initialize();	
 		
 		NotificationRequest request = new NotificationRequest();
 		request.setTitle(notificationRequest.getTitle());
@@ -27,7 +27,11 @@ public class TestMessageController {
 		request.setTopic(notificationRequest.getTopic());
 		request.setToken(notificationRequest.getToken());
 		
-		service.messageToToken(request);		
+		try {
+			service.sendMessageAndSaveToAntrian(request);
+		} catch (Exception e) {
+			return Map.of("message", e.getMessage());
+		}		
 		return Map.of("message", "sukses");
 	}
 
