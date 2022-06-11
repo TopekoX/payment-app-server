@@ -36,6 +36,8 @@ import com.topekox.pembayaran.entity.AntrianFCM;
 import com.topekox.pembayaran.entity.StatusAntrian;
 import com.topekox.pembayaran.fcm.NotificationRequest;
 
+import lombok.NoArgsConstructor;
+
 /**
  * Firebase Cloud Messaging API (V1) Read More:
  * {@link https://firebase.google.com/docs/cloud-messaging/migrate-v1}
