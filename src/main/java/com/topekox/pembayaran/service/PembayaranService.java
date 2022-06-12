@@ -56,7 +56,10 @@ public class PembayaranService {
 		User user = userDao.findByEmail(email);
 		List<UserFCMToken> tokens = userFcmTokenDao.findByToken(token);
 
-		if (!tokens.isEmpty()) {
+		// cek apakah user & tokennya sudah ada
+		// kalau ada tidak disimpan lagi
+		if (!tokens.isEmpty() && 
+				user.getEmail().equals(tokens.get(0).getUser().getEmail())) {
 			return;
 		}
 
