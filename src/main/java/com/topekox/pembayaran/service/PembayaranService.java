@@ -58,7 +58,7 @@ public class PembayaranService {
 
 		// cek apakah user & tokennya sudah ada
 		// kalau ada tidak disimpan lagi
-		if (!tokens.isEmpty() && 
+		if (!tokens.isEmpty() ||
 				user.getEmail().equals(tokens.get(0).getUser().getEmail())) {
 			return;
 		}
