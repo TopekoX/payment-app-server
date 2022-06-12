@@ -18,12 +18,12 @@ public class LoginController {
 
 	@PostMapping(value = "/login")
 	public Map<String, Object> login(@RequestBody @Valid LoginRequest loginRequest) {
-		String username = "ucup";
+		String username = "ucup@gmail.com";
 		String password = "123456";
 		
 		Map<String, Object> result = new HashMap<>();
 		
-		if (username.equals(loginRequest.getUsername()) && password.equals(loginRequest.getPassword())) {
+		if (username.equals(loginRequest.getEmail()) && password.equals(loginRequest.getPassword())) {
 			result.put("success", true);
 		} else {
 			result.put("success", false);

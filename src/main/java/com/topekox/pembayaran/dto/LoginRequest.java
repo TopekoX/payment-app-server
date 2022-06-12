@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
 
-	@NotBlank(message = "Username Tidak Boleh Kosong")
-	private String username;
+	@NotBlank(message = "Email Tidak Boleh Kosong")
+	private String email;
 	@NotBlank(message = "Password Tidak Boleh Kosong")
 	private String password;
 	
