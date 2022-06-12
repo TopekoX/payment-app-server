@@ -75,10 +75,8 @@ public class PembayaranService {
 		}
 
 		try {
-			fcmService.registerTokenToTopics(token, "produk");
-
 			if (user != null) {
-				log.info("Find User: " + user);
+				log.info("Find User by Email: " + user.getEmail());
 				UserFCMToken userFcmToken = new UserFCMToken();
 				userFcmToken.setUser(user);
 				userFcmToken.setToken(token);
@@ -87,6 +85,8 @@ public class PembayaranService {
 				log.info("Result: " + result);
 				userFcmTokenDao.save(userFcmToken);
 				log.info("Simpan Token FCM user yang baru, untuk user dengan ID: " + user.getId());
+				
+				fcmService.registerTokenToTopics(token, "produk");
 			}
 		} catch (RegisterTokenToTopicFailedException e) {
 			log.error(e.getMessage());

@@ -148,10 +148,19 @@ public class FCMService {
 	public void registerTokenToTopics(String token, String topic) 
 			throws RegisterTokenToTopicFailedException {
 		
+		log.info("Menerima topic {} dengan token {}", topic, token);
+		
 		try {
+			log.info("Siap mendaftarkan token ke topic...");
 			TopicManagementResponse response = FirebaseMessaging.getInstance()
 					.subscribeToTopic(Arrays.asList(token), topic);
-			log.info(response.getSuccessCount() + " token {} sudah disubscribe ke topik {}.", token, topic);
+			
+			if (response.getSuccessCount() == 1) {
+				log.info("Berhasil mendaftarkan token ke topik {}", topic);
+			} else if (response.getSuccessCount() == 0) {
+				log.error("GAGAL mendaftarkan token ke topik {}", topic);
+			}
+			
 		} catch (FirebaseMessagingException e) {
 			log.error(e.getMessage());
 		}
