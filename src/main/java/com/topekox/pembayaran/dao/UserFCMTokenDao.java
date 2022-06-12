@@ -10,7 +10,7 @@ import com.topekox.pembayaran.entity.UserFCMToken;
 @RepositoryRestResource(collectionResourceRel = "userfcmtoken", path = "userfcmtoken")
 public interface UserFCMTokenDao extends JpaRepository<UserFCMToken, Long> {
 	
-	long deleteByToken(String token);
+	long deleteByUserId(Long userId);
 	
 	Page<UserFCMToken> findByToken(String token, Pageable pageable);
 

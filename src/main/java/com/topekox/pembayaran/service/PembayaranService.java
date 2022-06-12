@@ -57,18 +57,19 @@ public class PembayaranService {
 	@Transactional
 	public void updateToken(String email, String token) {
 		User user = userDao.findByEmail(email);
-		
+
 		Pageable pageRequest = PageRequest.of(0, 1);
 		Page<UserFCMToken> tokens = userFcmTokenDao.findByToken(token, pageRequest);
-		
-		log.info("Cek Data user id {} token {}.", 
-				tokens.getNumberOfElements(),
-				tokens.getTotalElements());
 
+		// Cek kalau token dan usernya sama maka di skip.
 		if (tokens.getNumberOfElements() >= 1) {
 			UserFCMToken userToken = tokens.getContent().get(0);
-			if ((user.getId() == userToken.getId()) && 
-					(userToken.getToken().equals(token))) {
+			log.info("Cek Data user id {} token {}.", tokens.getContent().get(0).getId(),
+					tokens.getContent().get(0).getToken());
+			log.info("User ID == Token User ID: {}, User Token == Token: {}",
+					user.getId() == userToken.getUser().getId(), userToken.getToken().equals(token));
+
+			if ((user.getId() == userToken.getUser().getId()) && (userToken.getToken().equals(token))) {
 				return;
 			}
 		}
@@ -81,8 +82,9 @@ public class PembayaranService {
 				UserFCMToken userFcmToken = new UserFCMToken();
 				userFcmToken.setUser(user);
 				userFcmToken.setToken(token);
-				userFcmTokenDao.deleteByToken(token);
 				log.info("Hapus semua FCM token, untuk user dengan ID: " + user.getId());
+				long result = userFcmTokenDao.deleteByUserId(user.getId());
+				log.info("Result: " + result);
 				userFcmTokenDao.save(userFcmToken);
 				log.info("Simpan Token FCM user yang baru, untuk user dengan ID: " + user.getId());
 			}
