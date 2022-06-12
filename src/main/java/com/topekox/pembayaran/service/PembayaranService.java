@@ -3,6 +3,9 @@ package com.topekox.pembayaran.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,12 +57,18 @@ public class PembayaranService {
 	@Transactional
 	public void updateToken(String email, String token) {
 		User user = userDao.findByEmail(email);
-		List<UserFCMToken> tokens = userFcmTokenDao.findByToken(token);
+		
+		Pageable pageRequest = PageRequest.of(0, 1);
+		Page<UserFCMToken> tokens = userFcmTokenDao.findByToken(token, pageRequest);
+		
+		log.info("Cek Data user id {} token {}.", 
+				tokens.getNumberOfElements(),
+				tokens.getTotalElements());
 
-		// cek apakah user & tokennya sudah ada
-		// kalau ada tidak disimpan lagi
-		if (!tokens.isEmpty()) {
-			if (user.getEmail().equals(tokens.get(0).getUser().getEmail())) {
+		if (tokens.getNumberOfElements() >= 1) {
+			UserFCMToken userToken = tokens.getContent().get(0);
+			if ((user.getId() == userToken.getId()) && 
+					(userToken.getToken().equals(token))) {
 				return;
 			}
 		}

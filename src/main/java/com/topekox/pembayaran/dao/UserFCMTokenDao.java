@@ -1,7 +1,7 @@
 package com.topekox.pembayaran.dao;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,6 +12,6 @@ public interface UserFCMTokenDao extends JpaRepository<UserFCMToken, Long> {
 	
 	long deleteByToken(String token);
 	
-	List<UserFCMToken> findByToken(String token);
+	Page<UserFCMToken> findByToken(String token, Pageable pageable);
 
 }
