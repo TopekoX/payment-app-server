@@ -11,15 +11,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.topekox.pembayaran.dao.AntrianFCMDao;
 import com.topekox.pembayaran.fcm.NotificationRequest;
 import com.topekox.pembayaran.service.FCMService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @SpringBootTest
 public class FCMServiceTest {
 	
+	@Autowired 
+	private FCMService service; 
 	private static FirebaseOptions option;
-	@Autowired private AntrianFCMDao antrianFCMDao; 
 	
 	@BeforeAll
 	public static void beforeAll() {
@@ -33,7 +36,7 @@ public class FCMServiceTest {
 
 			if (FirebaseApp.getApps().isEmpty()) {
 				FirebaseApp.initializeApp(option);
-				System.out.println("Firebase App has been initialized");
+				log.info("Firebase App has been initialized");
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -41,9 +44,7 @@ public class FCMServiceTest {
 	}
 
 	@Test
-	public void testFCMSendMessage() {
-		FCMService service = new FCMService(antrianFCMDao);
-		
+	public void testFCMSendMessage() {		
 		NotificationRequest request = new NotificationRequest();
 		request.setTitle("Test FCM Message");
 		request.setMessage("FCM Say...Hello World!!!");
@@ -53,9 +54,11 @@ public class FCMServiceTest {
 				+ "-qb8m-CbPPWuqflNLy1Wg9pA9xYhb1sI");
 		
 		try {
+			log.info("Sending Message....");
 			service.sendMessageAndSaveToAntrian(request);
+			log.info("Message Sended...");
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 	}
 	

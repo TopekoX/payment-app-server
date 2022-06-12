@@ -8,8 +8,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -36,7 +34,7 @@ import com.topekox.pembayaran.entity.AntrianFCM;
 import com.topekox.pembayaran.entity.StatusAntrian;
 import com.topekox.pembayaran.fcm.NotificationRequest;
 
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Firebase Cloud Messaging API (V1) Read More:
@@ -45,10 +43,10 @@ import lombok.NoArgsConstructor;
  * @author ucup
  */
 
+@Slf4j
 @Service
 public class FCMService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FCMService.class);
 	private static final String TAG = "FCM Service: ";
 
 	@Value("${firebase.config-file}")
@@ -64,7 +62,7 @@ public class FCMService {
 	public void initialize() {
 
 		try {
-			LOGGER.info(TAG + "Load file: " + firebaseConfigFile);
+			log.info(TAG + "Load file: " + firebaseConfigFile);
 
 			FirebaseOptions option = FirebaseOptions.builder()
 					.setCredentials(
@@ -73,10 +71,10 @@ public class FCMService {
 
 			if (FirebaseApp.getApps().isEmpty()) {
 				FirebaseApp.initializeApp(option);
-				LOGGER.info(TAG + "Firebase App has been initialized");
+				log.info(TAG + "Firebase App has been initialized");
 			}
 		} catch (IOException e) {
-			LOGGER.error(TAG + e.getMessage());
+			log.error(TAG + e.getMessage());
 		}
 	}
 
@@ -85,7 +83,7 @@ public class FCMService {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonOutput = gson.toJson(message);
 		String response = sendAndGetResponse(message);
-		LOGGER.info(
+		log.info(
 				"Sent message to token. Device token: " + request.getToken() + ", " + response + " msg " + jsonOutput);
 	}
 	
@@ -110,7 +108,7 @@ public class FCMService {
 		Page<AntrianFCM> antrianTeratas = 
 				antrianFCMDao.findByStatusAntrian(StatusAntrian.BARU, pageRequest);
 		
-		LOGGER.info(TAG + "Memproses {} antrian dari {}",
+		log.info(TAG + "Memproses {} antrian dari {}",
 				antrianTeratas.getNumberOfElements(),
 				antrianTeratas.getTotalElements());
 		
@@ -119,7 +117,7 @@ public class FCMService {
 		}
 		
 		AntrianFCM antrianFCM = antrianTeratas.getContent().get(0);
-		LOGGER.info(TAG + antrianFCM.toString());
+		log.info(TAG + antrianFCM.toString());
 		
 		NotificationRequest request = new NotificationRequest();
 		request.setMessage(antrianFCM.getMessage());
@@ -129,11 +127,11 @@ public class FCMService {
 		
 		try {
 			sendMessageToToken(request);
-			LOGGER.info(TAG + "Sukses Mengirim Pesan...");
+			log.info(TAG + "Sukses Mengirim Pesan...");
 			antrianFCM.setStatusAntrian(StatusAntrian.TERKIRIM);
 			antrianFCM.setWaktuKirim(new Date());
 		} catch (Exception e) {
-			LOGGER.error(TAG + e.getMessage());
+			log.error(TAG + e.getMessage());
 			antrianFCM.setStatusAntrian(StatusAntrian.GAGAL_KIRIM);
 			antrianFCM.setWaktuKirim(new Date());
 			antrianFCM.setKeterangan(e.getMessage());			
