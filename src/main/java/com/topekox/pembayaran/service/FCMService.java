@@ -2,7 +2,9 @@ package com.topekox.pembayaran.service;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -25,13 +27,16 @@ import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.TopicManagementResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.topekox.pembayaran.dao.AntrianFCMDao;
 import com.topekox.pembayaran.entity.AntrianFCM;
 import com.topekox.pembayaran.entity.StatusAntrian;
+import com.topekox.pembayaran.exception.RegisterTokenToTopicFailedException;
 import com.topekox.pembayaran.fcm.NotificationRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -138,6 +143,18 @@ public class FCMService {
 		} finally {
 			antrianFCMDao.save(antrianFCM);
 		}	
+	}
+	
+	public void registerTokenToTopics(String token, String topic) 
+			throws RegisterTokenToTopicFailedException {
+		
+		try {
+			TopicManagementResponse response = FirebaseMessaging.getInstance()
+					.subscribeToTopic(Arrays.asList(token), topic);
+			log.info(response.getSuccessCount() + " token {} sudah disubscribe ke topik {}.", token, topic);
+		} catch (FirebaseMessagingException e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
