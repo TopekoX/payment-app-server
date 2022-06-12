@@ -53,6 +53,11 @@ public class PembayaranService {
 	@Transactional
 	public void updateToken(String email, String token) {
 		User user = userDao.findByEmail(email);
+		List<UserFCMToken> tokens = userFcmTokenDao.findByToken(token);
+		
+		if (!tokens.isEmpty()) {
+			return;
+		}
 		
 		if (user != null) {
 			log.info("Find User: " + user);
