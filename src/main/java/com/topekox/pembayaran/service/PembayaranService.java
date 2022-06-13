@@ -1,6 +1,10 @@
 package com.topekox.pembayaran.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -91,6 +95,12 @@ public class PembayaranService {
 		} catch (RegisterTokenToTopicFailedException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	@Transactional
+	public void simpanProduk(@Valid Produk produk) {
+		produkDao.save(produk);
+		fcmService.sendMessageToTopic();
 	}
 
 }

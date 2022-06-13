@@ -1,5 +1,6 @@
 package com.topekox.pembayaran.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,5 +12,11 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Produk extends BaseEntity {
+	
+	@Column(nullable = false, unique = true)
+	private String kode;
+	
+	@Column(nullable = false, unique = true)
+	private String nama;
 
 }

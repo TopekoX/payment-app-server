@@ -96,6 +96,27 @@ public class FCMService {
 		sendMessageToToken(request);
 		saveToAntrianFCM(request);
 	}
+	
+	public void sendMessageToTopic() {
+		Message message = Message.builder()
+				.putData("body", "update")
+				.putData("title", "test")
+				.setTopic("produk")
+				.build();
+		
+		try {
+			String response = FirebaseMessaging.getInstance().send(message);
+			if(message != null) {
+				log.info("Sukses mengirim pesan: {}", response);
+			} else {
+				log.error("GAGAL mengirim pesan: {}", response);
+			}
+		} catch (FirebaseMessagingException e) {
+			log.error(TAG + e.getMessage());
+		}
+		
+	}
+
 
 	private void saveToAntrianFCM(NotificationRequest request) {
 		AntrianFCM antrianFCM = new AntrianFCM();
@@ -165,7 +186,7 @@ public class FCMService {
 			log.error(e.getMessage());
 		}
 	}
-
+	
 	private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
 		return FirebaseMessaging.getInstance().sendAsync(message).get();
 	}
