@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -35,6 +34,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.topekox.pembayaran.dao.AntrianFCMDao;
 import com.topekox.pembayaran.entity.AntrianFCM;
+import com.topekox.pembayaran.entity.Produk;
 import com.topekox.pembayaran.entity.StatusAntrian;
 import com.topekox.pembayaran.exception.RegisterTokenToTopicFailedException;
 import com.topekox.pembayaran.fcm.NotificationRequest;
@@ -97,24 +97,25 @@ public class FCMService {
 		saveToAntrianFCM(request);
 	}
 	
-	public void sendMessageToTopic() {
+	public void sendMessageToTopic(Produk produk) {
 		Message message = Message.builder()
-				.putData("body", "update")
-				.putData("title", "test")
+				.setNotification(Notification.builder()
+						.setTitle("Produk")
+						.setBody("Update Produk: " + produk.getNama())
+						.build())
 				.setTopic("produk")
 				.build();
 		
 		try {
 			String response = FirebaseMessaging.getInstance().send(message);
-			if(message != null) {
+			if(response != null) {
 				log.info("Sukses mengirim pesan: {}", response);
 			} else {
 				log.error("GAGAL mengirim pesan: {}", response);
 			}
 		} catch (FirebaseMessagingException e) {
 			log.error(TAG + e.getMessage());
-		}
-		
+		}		
 	}
 
 

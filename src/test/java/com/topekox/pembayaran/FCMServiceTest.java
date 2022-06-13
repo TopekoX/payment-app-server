@@ -48,7 +48,7 @@ public class FCMServiceTest {
 		NotificationRequest request = new NotificationRequest();
 		request.setTitle("Test FCM Message");
 		request.setMessage("FCM Say...Hello World!!!");
-		request.setTopic("foo");
+		request.setTopic("produk");
 		request.setToken("d7PDKnfFS327_0mjH7U9zg:APA91bHcMEoFD3EGFkRsGf2dSq6omuDIUNL719"
 				+ "yOcxW1sobTYwts0yaZSi7Fdk9zwsYJdEE28FdmcFG5tCINF1p0xLnOEHDC_QwQD12I2xTS"
 				+ "-qb8m-CbPPWuqflNLy1Wg9pA9xYhb1sI");
