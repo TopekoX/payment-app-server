@@ -112,7 +112,9 @@ public class FCMService {
 		/* Mengirim message berupa payload */
 		Message message = Message.builder()
 				.putData("action", "update")
-				.putData("message", "Hello World")
+				.putData("id_produk", produk.getId().toString())
+				.putData("kode_produk", produk.getKode())
+				.putData("nama_produk", produk.getNama())
 				.setTopic("produk")
 				.build();
 		
