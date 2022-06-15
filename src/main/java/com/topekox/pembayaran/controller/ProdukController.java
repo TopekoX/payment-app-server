@@ -26,7 +26,7 @@ public class ProdukController {
 	}
 	
 	@GetMapping("/produk")
-	public List<Produk> semuaProuduk() {
+	public List<Produk> semuaProduk() {
 		return pembayaranService.findAll();
 	}
 	

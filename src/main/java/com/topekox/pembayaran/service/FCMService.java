@@ -98,11 +98,21 @@ public class FCMService {
 	}
 	
 	public void sendMessageToTopic(Produk produk) {
+		
+		/* Mengirim message berupa notifikasi dan payload */
+//		Message message = Message.builder()
+//				.setNotification(Notification.builder()
+//						.setTitle("Produk")
+//						.setBody("Update Produk: " + produk.getNama())
+//						.build())
+//				.putData("action", "update")
+//				.setTopic("produk")
+//				.build();
+		
+		/* Mengirim message berupa payload */
 		Message message = Message.builder()
-				.setNotification(Notification.builder()
-						.setTitle("Produk")
-						.setBody("Update Produk: " + produk.getNama())
-						.build())
+				.putData("action", "update")
+				.putData("message", "Hello World")
 				.setTopic("produk")
 				.build();
 		
